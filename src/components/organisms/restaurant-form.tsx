@@ -16,7 +16,7 @@ import {
 
 type FormValues = Zod.infer<typeof restaurantFormSchema>;
 
-export const RestaurantForm: React.FC<RestaurantFormProps> = ({
+const RestaurantForm: React.FC<RestaurantFormProps> = ({
   restaurant,
   isExecutedAction,
   onHandlerSubmit,
@@ -92,3 +92,5 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     </Card>
   );
 };
+
+export default RestaurantForm;

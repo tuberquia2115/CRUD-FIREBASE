@@ -12,7 +12,7 @@ import {
 } from "../atoms";
 import { RestaurantListProps } from "@/interfaces";
 
-export const RestaurantList: React.FC<RestaurantListProps> = ({
+const RestaurantList: React.FC<RestaurantListProps> = ({
   restaurants,
   onHandleEdit,
   onHandleDelete,
@@ -73,3 +73,5 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
     </div>
   );
 };
+
+export default RestaurantList;

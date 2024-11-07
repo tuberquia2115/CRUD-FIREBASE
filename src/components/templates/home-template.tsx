@@ -1,12 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { BadgePlus, CirclePlus, CircleX, Pencil, Store } from "lucide-react";
 
+import { useRestaurant } from "@/hooks";
 import { IRestaurant } from "@/interfaces";
 import { NoRestaurants } from "../molecules";
 import { Button, Spinner, Title } from "../atoms";
-import { RestaurantForm, RestaurantList } from "../organisms";
 
-import { useRestaurant } from "@/hooks";
+const RestaurantForm = React.lazy(() => import("../organisms/restaurant-form"));
+const RestaurantList = React.lazy(() => import("../organisms/restaurant-list"));
 
 type Command = (data: IRestaurant) => Promise<void>;
 type Action = "add" | "edit" | "list";
@@ -49,13 +50,15 @@ export const HomeTemplate = () => {
     setRestaurantSelected(item);
   };
 
+  const renderSpinner = (
+    <div className="w-full flex justify-center items-center ">
+      <Spinner />
+    </div>
+  );
+
   const renderRestaurantList = () => {
     if (isLoadingRestaurants) {
-      return (
-        <div className="w-full flex justify-center items-center ">
-          <Spinner />
-        </div>
-      );
+      return renderSpinner;
     }
 
     if (restaurants?.length === 0) {
@@ -71,15 +74,13 @@ export const HomeTemplate = () => {
     );
   };
 
-  const renderRestaurantForm = () => {
-    const props = {
-      onHandlerSubmit: handlerSubmit,
-      isExecutedAction,
-      restaurant: restaurantSelected,
-    };
-
-    return <RestaurantForm {...props} />;
-  };
+  const renderRestaurantForm = () => (
+    <RestaurantForm
+      restaurant={restaurantSelected}
+      isExecutedAction={isExecutedAction}
+      onHandlerSubmit={handlerSubmit}
+    />
+  );
 
   const commonElements = {
     btnLabel: "Cancel",
@@ -135,7 +136,9 @@ export const HomeTemplate = () => {
             {restaurantActions[action].btnLabel}
           </Button>
         </div>
-        {isActionList ? renderRestaurantList() : renderRestaurantForm()}
+        <React.Suspense fallback={renderSpinner}>
+          {isActionList ? renderRestaurantList() : renderRestaurantForm()}
+        </React.Suspense>
       </div>
     </div>
   );
